@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "CreateTestimonialWithGoogleGemini";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+    var testimonials = ViewBag.testimonials;
+}
+
+<div class="container-mt-5">
+    <h2>Gemini AI ile Oluşturulan Müşteri Yorum ve Değerlendirme İçerikler </h2>
+    <ul class="list-group mt-3">
+        @if (testimonials != null)
+        {
+            foreach (var item in testimonials)
+            {
+                <li class="list-group-item">@item</li>
+            }
+        }
+        else
+        {
+            <li class="list-group-item text-danger">Gemini AI'den veri alınamadı: @testimonials</li>
+        }
+    </ul>
+</div>

@@ -1,0 +1,82 @@
+﻿@model List<PricingPlanItem>
+<section id="pricing" class="pricing-area pt-70 pb-60 fix p-relative">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-6 col-md-12">
+                <div class="section-title center-align pr-60" data-aos="fade-up" data-aos-duration="1000">
+                    <h2>
+                        Esnek ve Size Uygun <br>Sigorta Planlarımız
+                    </h2>
+                    <p class="pt-30" data-aos="fade-up" data-aos-duration="1200">
+                        InsureYou AI olarak farklı ihtiyaçlara ve bütçelere uygun sigorta çözümleri sunuyoruz.
+                        Geniş kapsamlı seçeneklerimiz sayesinde kendiniz, sevdikleriniz ve sahip olduğunuz değerler için doğru güvenceyi kolayca seçebilirsiniz.
+                    </p>
+                    <p data-aos="fade-up" data-aos-duration="1400">
+                        İhtiyaçlarınıza en uygun planı seçerek sigorta süreçlerinizi daha kolay ve güvenli hale getirebilirsiniz.
+                        Esnek fiyat seçenekleri ve dijital çözümlerimizle geleceğinizi bugünden güvence altına alıyoruz.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-12">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="pricing-box pricing-box2 mb-60" data-aos="fade-left" data-aos-duration="1000">
+                            <div class="pricing-head">
+                                <h3>@ViewBag.pricingPlan1Title</h3>
+                                <div class="price-count">
+                                    <h2>@ViewBag.pricingPlan1Price ₺ <strong>/Aylık</strong></h2>
+                                </div>
+                                <hr>
+                            </div>
+
+                            <div class="pricing-body mt-20 mb-30 text-left">
+                                <ul>
+                                    @foreach (var item in Model)
+                                    {
+                                        if(item.PricingPlanId == ViewBag.pricingPlan1Id)
+                                        {
+                                            <li>@item.Title</li>
+                                        }
+                                    }
+                                </ul>
+                            </div>            
+                            <div class="pricing-btn">
+                                <a href="#contact" class="btn ss-btn">Şimdi Katıl</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6">
+                        <div class="pricing-box pricing-box2 active mb-60" data-aos="fade-left" data-aos-duration="1400">
+                            <div class="pricing-head">
+                                <h3>@ViewBag.pricingPlan2Title</h3>
+                                <div class="price-count">
+                                    <h2>@ViewBag.pricingPlan2Price ₺ <strong>/Aylık</strong></h2>
+                                </div>
+                                <hr>
+                            </div>
+
+                            <div class="pricing-body mt-20 mb-30 text-left">
+                                <ul>
+                                    @foreach (var item in Model)
+                                    {
+                                        if (item.PricingPlanId == ViewBag.pricingPlan1Id)
+                                        {
+                                            <li>@item.Title</li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                                     
+                            <div class="pricing-btn">
+                                <a href="#contact" class="btn ss-btn">Şimdi Katıl</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
