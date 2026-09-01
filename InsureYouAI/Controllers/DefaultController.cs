@@ -1,5 +1,6 @@
 ﻿using InsureYouAI.Context;
 using InsureYouAI.Entities;
+using InsureYouAI.Services;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
@@ -13,10 +14,12 @@ namespace InsureYouAI.Controllers
     public class DefaultController : Controller
     {
         private readonly InsureContext _context;
+        private readonly AIService _aiService;
 
-        public DefaultController(InsureContext context)
+        public DefaultController(InsureContext context, AIService aiService)
         {
             _context = context;
+            _aiService = aiService;
         }
 
         public IActionResult Index()
@@ -32,6 +35,14 @@ namespace InsureYouAI.Controllers
         [HttpPost]
         public async Task<IActionResult> SendMessage(Message message)
         {
+            var combinedText = $"{message.Subject} - {message.MessageDetail}";
+            var predictedCategory = await _aiService.PredictCategoryAsync(combinedText);
+            var priority = await _aiService.PredictPriorityAsync(combinedText);
+
+
+            message.AICategory = predictedCategory;
+            message.Priority = priority;
+
             message.SendDate = DateTime.Now;
             message.IsRead = false;
 

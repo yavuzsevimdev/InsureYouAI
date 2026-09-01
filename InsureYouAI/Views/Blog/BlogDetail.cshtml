@@ -34,8 +34,8 @@
                     <div class="col-lg-8">
                         <div class="blog-details-wrap">
                             @await Component.InvokeAsync("_BlogDetailContentComponentPartial", new { id = ViewBag.i })
-                            @await Component.InvokeAsync("_BlogDetailNextAndPrevBlogComponentPartial")
-                            @await Component.InvokeAsync("_BlogDetailAboutAuthorComponentPartial")
+                            @await Component.InvokeAsync("_BlogDetailNextAndPrevBlogComponentPartial", new { id = ViewBag.i })
+                            @await Component.InvokeAsync("_BlogDetailAboutAuthorComponentPartial", new { id = ViewBag.i })
                             @await Component.InvokeAsync("_BlogDetailCommentListComponentPartial", new { id = ViewBag.i })
                             @await Html.PartialAsync("AddComment", "Blog")
                         </div>

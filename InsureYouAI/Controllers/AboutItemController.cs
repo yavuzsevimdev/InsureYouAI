@@ -17,6 +17,9 @@ namespace InsureYouAI.Controllers
 
         public IActionResult AboutItemList()
         {
+            ViewBag.ControllerName = "Hakkımızda Ögeleri";
+            ViewBag.PageName = "Mevcut Hakkımızda Ögeleri";
+
             var values = _context.AboutItems.ToList();
             return View(values);
         }
@@ -24,6 +27,9 @@ namespace InsureYouAI.Controllers
         [HttpGet]
         public IActionResult CreateAboutItem()
         {
+            ViewBag.ControllerName = "Hakkımızda";
+            ViewBag.PageName = "Yeni Hakkımızda Öge Girişi";
+
             return View();
         }
 
@@ -38,6 +44,9 @@ namespace InsureYouAI.Controllers
         [HttpGet]
         public IActionResult UpdateAboutItem(int id)
         {
+            ViewBag.ControllerName = "Hakkımızda";
+            ViewBag.PageName = "Mevcut Hakkımızda Ögeleri Güncelleme Sayfası";
+
             var value = _context.AboutItems.Find(id);
             return View(value);
         }
@@ -61,9 +70,9 @@ namespace InsureYouAI.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateAboutItemWithGoogleGemini()
         {
-            var apiKey = "GEMINI API KEY";
+            var apiKey = "";
             var endPoint = "https://generativelanguage.googleapis.com/v1beta/interactions";
-            var prompt = "Kurumsal bir sigorta firması için etkileyici, güven verici ve profesyonel bir 'Hakkımızda alanları (about item)' yazısı oluştur. Örneğin 'Geleceğinizi güvence altına alan kapsamlı sigorta çözümleri sunuyoruz.' şeklinde ve en fazla bu metin karakter uzunluğu kadar karakter uzunluğu olacak veya bunun gibi ve buna benzer daha zengin içerikler gelsin. En az 10 tane item istiyorum.";
+            var prompt = "Kurumsal bir sigorta firması için etkileyici, güven verici ve profesyonel bir 'Hakkımızda alanları (about item)' yazısı oluştur. Örneğin 'Geleceğinizi güvence altına alan kapsamlı sigorta çözümleri sunuyoruz.' şeklinde ve en fazla bu metin karakter uzunluğu kadar karakter uzunluğu olacak veya bunun gibi ve buna benzer daha zengin içerikler gelsin. 1 tane item istiyorum. HTML sayfasında görünteleyeceğim için çıktıyı HTML.Raw diyerek yazdıracağım. Buna uygun formatta çıktı ver.";
 
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Add("x-goog-api-key", apiKey);

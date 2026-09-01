@@ -332,6 +332,9 @@ namespace InsureYouAI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"));
 
+                    b.Property<string>("AICategory")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -345,6 +348,9 @@ namespace InsureYouAI.Migrations
 
                     b.Property<string>("NameSurname")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Priority")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("SendDate")

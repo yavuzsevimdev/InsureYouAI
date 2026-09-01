@@ -1,19 +1,23 @@
-﻿<!-- ApexCharts kütüphanesi -->
+﻿<!-- ApexCharts -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 <div class="col">
-    <div class="card rounded-4">
+    <div class="card rounded-4 h-100 dashboard-chart-card">
         <div class="card-body">
+
             <div class="d-flex align-items-center justify-content-between mb-3">
                 <div>
                     <h4 class="mb-0">Poliçe Sayısı</h4>
                     <p class="mb-0">Poliçe Türleri</p>
                 </div>
+
                 <div class="fs-2 text-primary">
                     <i class="bi bi-shield-check"></i>
                 </div>
             </div>
-            <div id="policyDynamicChart"></div>
+
+            <div id="policyDynamicChart" class="policy-chart"></div>
+
         </div>
     </div>
 </div>
@@ -27,18 +31,24 @@
     var options = {
         chart: {
             type: 'area',
-            height: 100,
-            sparkline: { enabled: true }
+            height: 200,
+            sparkline: {
+                enabled: true
+            }
         },
+
         series: [{
-            PolicyType: 'Poliçe Sayısı',
+            name: 'Poliçe Sayısı',
             data: seriesData
         }],
+
         stroke: {
             curve: 'smooth',
             width: 2
         },
+
         colors: ['#1E90FF'],
+
         fill: {
             type: 'gradient',
             gradient: {
@@ -48,8 +58,12 @@
                 stops: [0, 90, 100]
             }
         },
+
         tooltip: {
-            x: { show: false },
+            x: {
+                show: false
+            },
+
             y: {
                 formatter: function(val, opts) {
                     return labelsData[opts.dataPointIndex] + ": " + val;
@@ -58,6 +72,10 @@
         }
     };
 
-    var chart = new ApexCharts(document.querySelector("#policyDynamicChart"), options);
+    var chart = new ApexCharts(
+        document.querySelector("#policyDynamicChart"),
+        options
+    );
+
     chart.render();
 </script>

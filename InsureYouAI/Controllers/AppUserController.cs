@@ -53,7 +53,7 @@ namespace InsureYouAI.Controllers
 
             var allArticles = string.Join("\n\n", articles);
 
-            var apiKey = "OPENAI API KEY";
+            var apiKey = "";
 
             var prompt = $@"
 Sen bir sigorta sektöründe uzman bir içerik analistisin. 
@@ -146,7 +146,7 @@ Lütfen çıktıyı profesyonel rapor formatında, madde madde ve en sonda 5 mad
 
             var allComments = string.Join("\n\n", comments);
 
-            var apiKey = "OPENAI API KEY";
+            var apiKey = "";
 
             var prompt = $@"
 Sen kullanıcı davranış analizi yapan bir yapay zeka uzmanısın.

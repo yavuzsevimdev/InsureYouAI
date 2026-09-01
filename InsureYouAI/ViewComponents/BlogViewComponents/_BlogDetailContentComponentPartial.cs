@@ -1,5 +1,6 @@
 ﻿using InsureYouAI.Context;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace InsureYouAI.ViewComponents.BlogViewComponents
 {
@@ -14,7 +15,8 @@ namespace InsureYouAI.ViewComponents.BlogViewComponents
 
         public IViewComponentResult Invoke(int id)
         {
-            var value = _context.Articles.Where(x => x.ArticleId == id).FirstOrDefault();
+            var value = _context.Articles.Where(x => x.ArticleId == id).Include(y => y.AppUser).Include(z => z.Category).FirstOrDefault();
+            ViewBag.CommentCount = _context.Comments.Where(x => x.ArticleId == id).Count();
             return View(value);
         }
     }

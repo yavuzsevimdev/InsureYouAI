@@ -2,13 +2,18 @@
 
 <section id="recent-posts-4" class="widget widget_recent_entries">
     <h2 class="widget-title">Son Yazılar</h2>
-    <ul>
-        @foreach (var item in Model)
-        {
-            <li>
-                <a href="#">@item.Title</a>
-                <span class="post-date">@item.CreatedDate.ToString("dd-MMM-yyyy")</span>
-            </li>
-        }
-    </ul>
+    <div class="recent-blog-footer">
+        <ul>
+            @foreach (var item in Model)
+            {
+                <li>
+                    <div class="thum"> <img src="@item.CoverImageUrl" alt="img"></div>
+                    <div class="text">
+                        <a href="# style="color:black">@item.Title</a>
+                        <span class="far fa-calendar-alt"> @item.CreatedDate.ToString("dd-MMM-yyyy")</span>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
 </section>

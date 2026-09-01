@@ -5645,10 +5645,9 @@ border: 1px solid #777;
 .recent-blog-footer a {
     width: 100%;
     display: inline-block;
-    color:#fffc !important;
-}
+,}
 .recent-blog-footer a:hover {
-    color:#fff !important;
+    color:#000 !important;
 }
 .recent-blog-footer span {
     color:#4b83fc;

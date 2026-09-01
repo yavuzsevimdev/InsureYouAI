@@ -21,9 +21,16 @@
             <input type="text" asp-for="MainCoverImageUrl" class="form-control" />
             <br />
             <label>Kategori</label>
-            <input type="text" asp-for="CategoryId" class="form-control" />
+            <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select">
+                <option value="">Kategori Seçiniz</option>
+            </select>
             <br />
-            <label>İçerik</label>
+            <label>Yazar</label>
+            <select asp-for="AppUserId" asp-items="ViewBag.Authors" class="form-select">
+                <option value="">Yazar Seçiniz</option>
+            </select>
+            <br />
+            <label>Makale İçeriği</label>
             <textarea class="form-control" rows="15" asp-for="Content"></textarea>
             <br />
             <button class="btn btn-success">Makaleyi Güncelle</button>

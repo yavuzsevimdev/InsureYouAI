@@ -1,7 +1,10 @@
 ﻿using InsureYouAI.Context;
 using InsureYouAI.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
+using System.Text.Json;
 
 namespace InsureYouAI.Controllers
 {
@@ -16,13 +19,35 @@ namespace InsureYouAI.Controllers
 
         public IActionResult ArticleList()
         {
-            var values = _context.Articles.ToList();
+            ViewBag.ControllerName = "Makaleler";
+            ViewBag.PageName = "Makale Listesi";
+            var values = _context.Articles.Include(x => x.AppUser).Include(x => x.Category).ToList();
             return View(values);
         }
 
         [HttpGet]
         public IActionResult CreateArticle()
         {
+            ViewBag.ControllerName = "Makaleler";
+            ViewBag.PageName = "Yeni Makale Oluştur";
+
+            var categories = _context.Categories
+                .Select(x => new SelectListItem
+                {
+                    Text = x.CategoryName,
+                    Value = x.CategoryId.ToString()
+                }).ToList();
+            ViewBag.Categories = categories;
+
+            var authors = _context.Users
+                .Select(x => new SelectListItem
+                {
+                    Text = x.Name + " "+ x.Surname,
+                    Value = x.Id
+                }).ToList();
+
+            ViewBag.Authors = authors;
+
             return View();
         }
 
@@ -38,6 +63,26 @@ namespace InsureYouAI.Controllers
         [HttpGet]
         public IActionResult UpdateArticle(int id)
         {
+            ViewBag.ControllerName = "Makaleler";
+            ViewBag.PageName = "Makale Güncelleme Sayfası";
+
+            var categories = _context.Categories
+                .Select(x => new SelectListItem
+                {
+                    Text = x.CategoryName,
+                    Value = x.CategoryId.ToString()
+                }).ToList();
+            ViewBag.Categories = categories;
+
+            var authors = _context.Users
+                .Select(x => new SelectListItem
+                {
+                    Text = x.Name + " " + x.Surname,
+                    Value = x.Id
+                }).ToList();
+
+            ViewBag.Authors = authors;
+
             var value = _context.Articles.Find(id);
             return View(value);
         }
@@ -63,21 +108,23 @@ namespace InsureYouAI.Controllers
         [HttpGet]
         public IActionResult CreateArticleWithOpenAI()
         {
+            ViewBag.ControllerName = "Makaleler";
+            ViewBag.PageName = "Yapay Zeka Makale Oluşturucu";
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateArticleWithOpenAI(string prompt)
         {
-            var apiKey = "OPENAI API KEY";
+            var apiKey = "";
 
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
 
             var requestData = new
             {
-                model = "gpt-5.6",
-                instructions = "Sen bir sigorta şirketi için çalışan, içerik yazarlığı yapan bir yapay zekasın. Kullanıcının verdiği özet ve anahtar kelimelere göre sigortacılık sektörüyle ilgili makale üret. En az 3000 karakter olsun.",
+                model = "gpt-4o-mini",
+                instructions = "Sen bir sigorta şirketi için çalışan, içerik yazarlığı yapan bir yapay zekasın. Kullanıcının verdiği özet ve anahtar kelimelere göre sigortacılık sektörüyle ilgili makale üret. En az 3000 karakter olsun. HTML Raw etiketinin içerisine gelicek senin çıktın. Buna uygun formatta çıktı ver.",
                 input = prompt
             };
 
@@ -85,9 +132,21 @@ namespace InsureYouAI.Controllers
             
             if(response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadFromJsonAsync<OpenAIResponse>();
-                var content = result.output[1].content[0].text;
-                ViewBag.article = content ?? "Makale oluşturulamadı.";
+                var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+
+                var outputText = doc.RootElement
+                    .GetProperty("output")
+                    .EnumerateArray()
+                    .First(x =>
+                        x.GetProperty("type").GetString() == "message")
+                    .GetProperty("content")
+                    .EnumerateArray()
+                    .First(x =>
+                        x.GetProperty("type").GetString() == "output_text")
+                    .GetProperty("text")
+                    .GetString();
+
+                ViewBag.article = outputText ?? "Makale oluşturulamadı.";
             }
 
             return View();

@@ -1,51 +1,550 @@
 ﻿@model List<Testimonial>
+
 @{
-    ViewData["Title"] = "TestimonialList";
+    ViewData["Title"] = "Referanslar";
     Layout = "~/Views/AdminLayout/Index.cshtml";
-    int count = 0;
 }
 
-<div class="card">
-    <div class="card-body">
-        <div class="d-flex align-items-center">
-            <h5 class="mb-0">Referanslar Sayfası</h5>
-            <form class="ms-auto position-relative">
-                <div class="position-absolute top-50 translate-middle-y search-icon px-3"><i class="bi bi-search"></i></div>
-                <input class="form-control ps-5" type="text" placeholder="search">
-            </form>
+<style>
+    .testimonial-page {
+        padding: 10px 0;
+    }
+
+    .testimonial-header {
+        background: linear-gradient(135deg, #4f7cff 0%, #6c5ce7 100%);
+        border-radius: 16px;
+        padding: 28px 30px;
+        color: white;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 25px rgba(79, 124, 255, 0.18);
+    }
+
+        .testimonial-header h3 {
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .testimonial-header p {
+            margin-bottom: 0;
+            opacity: .85;
+        }
+
+    .testimonial-count {
+        background: rgba(255,255,255,.16);
+        border: 1px solid rgba(255,255,255,.2);
+        border-radius: 12px;
+        padding: 12px 18px;
+        text-align: center;
+        min-width: 100px;
+    }
+
+        .testimonial-count strong {
+            display: block;
+            font-size: 24px;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .testimonial-count span {
+            font-size: 12px;
+            opacity: .85;
+        }
+
+    .testimonial-toolbar {
+        background: #fff;
+        border-radius: 14px;
+        padding: 16px 20px;
+        margin-bottom: 18px;
+        box-shadow: 0 4px 18px rgba(0,0,0,.05);
+    }
+
+    .testimonial-search {
+        position: relative;
+        max-width: 320px;
+    }
+
+        .testimonial-search i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8b95a7;
+        }
+
+        .testimonial-search input {
+            padding-left: 42px;
+            border-radius: 10px;
+            border: 1px solid #e1e5eb;
+            height: 42px;
+        }
+
+            .testimonial-search input:focus {
+                border-color: #4f7cff;
+                box-shadow: 0 0 0 3px rgba(79,124,255,.10);
+            }
+
+    .testimonial-card {
+        background: #fff;
+        border: 1px solid #edf0f5;
+        border-radius: 14px;
+        overflow: hidden;
+        transition: all .2s ease;
+    }
+
+        .testimonial-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,.07);
+        }
+
+    .testimonial-table {
+        margin-bottom: 0;
+    }
+
+        .testimonial-table thead th {
+            background: #f8f9fc;
+            color: #697386;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            border-bottom: 1px solid #edf0f5;
+            padding: 15px 18px;
+        }
+
+        .testimonial-table tbody td {
+            padding: 16px 18px;
+            border-bottom: 1px solid #f0f2f6;
+            vertical-align: middle;
+        }
+
+        .testimonial-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .testimonial-table tbody tr {
+            transition: background .2s ease;
+        }
+
+            .testimonial-table tbody tr:hover {
+                background: #fafbff;
+            }
+
+    .testimonial-number {
+        width: 42px;
+        height: 42px;
+        background: #f0f4ff;
+        color: #4f7cff;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .testimonial-user {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 190px;
+    }
+
+    .testimonial-avatar {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #f0f3f8;
+        flex-shrink: 0;
+    }
+
+    .testimonial-avatar-placeholder {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: #eef2ff;
+        color: #4f7cff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .testimonial-name {
+        font-weight: 700;
+        color: #263238;
+        margin-bottom: 3px;
+    }
+
+    .testimonial-role {
+        font-size: 12px;
+        color: #8a94a6;
+    }
+
+    .testimonial-title {
+        display: inline-block;
+        background: #eef4ff;
+        color: #4169d8;
+        padding: 6px 10px;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .testimonial-comment {
+        max-width: 600px;
+        color: #667085;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .testimonial-quote {
+        color: #4f7cff;
+        font-size: 18px;
+        margin-right: 5px;
+    }
+
+    .testimonial-actions {
+        display: flex;
+        gap: 7px;
+        justify-content: flex-end;
+    }
+
+    .testimonial-action {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all .2s ease;
+    }
+
+        .testimonial-action.edit {
+            background: #fff6df;
+            color: #e5a100;
+        }
+
+            .testimonial-action.edit:hover {
+                background: #ffc107;
+                color: white;
+            }
+
+        .testimonial-action.delete {
+            background: #fff0f0;
+            color: #e34d59;
+        }
+
+            .testimonial-action.delete:hover {
+                background: #dc3545;
+                color: white;
+            }
+
+    .empty-testimonial {
+        padding: 60px 20px;
+        text-align: center;
+        color: #8a94a6;
+    }
+
+        .empty-testimonial i {
+            font-size: 45px;
+            margin-bottom: 15px;
+            display: block;
+            color: #c7ced9;
+        }
+
+    @@media (max-width: 768px) {
+        .testimonial-header {
+            padding: 22px;
+        }
+
+            .testimonial-header .d-flex {
+                gap: 20px;
+            }
+
+        .testimonial-count {
+            min-width: 80px;
+        }
+
+        .testimonial-toolbar {
+            padding: 12px;
+        }
+
+        .testimonial-search {
+            max-width: 100%;
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="testimonial-page">
+
+    <!-- HEADER -->
+    <div class="testimonial-header">
+        <div class="d-flex align-items-center justify-content-between flex-wrap">
+
+            <div>
+                <h3>
+                    <i class="bi bi-chat-quote me-2"></i>
+                    Müşteri Referansları
+                </h3>
+
+                <p>
+                    Müşterilerinizden gelen değerlendirmeleri yönetin.
+                </p>
+            </div>
+
+            <div class="testimonial-count mt-3 mt-md-0">
+                <strong>@Model.Count</strong>
+                <span>Toplam Referans</span>
+            </div>
+
         </div>
-        <div class="table-responsive mt-3">
-            <table class="table align-middle">
-                <thead class="table-secondary">
+    </div>
+
+
+    <!-- TOOLBAR -->
+    <div class="testimonial-toolbar">
+
+        <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+
+            <div>
+                <h6 class="mb-1 fw-bold">
+                    Referans Listesi
+                </h6>
+
+                <small class="text-muted">
+                    Müşteri yorumlarını buradan görüntüleyebilir ve yönetebilirsiniz.
+                </small>
+            </div>
+
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+
+                <div class="testimonial-search">
+                    <i class="bi bi-search"></i>
+                    <input type="text"
+                           id="testimonialSearch"
+                           class="form-control"
+                           placeholder="Referanslarda ara..." />
+                </div>
+
+                <a href="/Testimonial/CreateTestimonial"
+                   class="btn btn-primary px-3"
+                   style="height:42px;border-radius:10px;">
+
+                    <i class="bi bi-plus-lg me-1"></i>
+                    Yeni Referans
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TABLE -->
+    <div class="testimonial-card">
+
+        <div class="table-responsive">
+
+            <table class="table testimonial-table align-middle">
+
+                <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Adı Soyadı</th>
+                        <th style="width:70px;">#</th>
+                        <th>Müşteri</th>
                         <th>Unvan</th>
                         <th>Yorum</th>
-                        <th>Güncelle</th>
-                        <th>Sil</th>
+                        <th class="text-end" style="width:110px;">İşlemler</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach (var item in Model)
+
+                <tbody id="testimonialTableBody">
+
+                    @if (Model != null && Model.Any())
                     {
-                        count++;
+                        int count = 0;
+
+                        foreach (var item in Model)
+                        {
+                            count++;
+
+                            <tr class="testimonial-row">
+
+                                <!-- NUMBER -->
+                                <td>
+                                    <div class="testimonial-number">
+                                        @count
+                                    </div>
+                                </td>
+
+
+                                <!-- USER -->
+                                <td>
+
+                                    <div class="testimonial-user">
+
+                                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                        {
+                                            <img src="@item.ImageUrl"
+                                                 alt="@item.NameSurname"
+                                                 class="testimonial-avatar" />
+                                        }
+                                        else
+                                        {
+                                            <div class="testimonial-avatar-placeholder">
+                                                <i class="bi bi-person"></i>
+                                            </div>
+                                        }
+
+                                        <div>
+                                            <div class="testimonial-name">
+                                                @item.NameSurname
+                                            </div>
+
+                                            <div class="testimonial-role">
+                                                Müşteri
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- TITLE -->
+                                <td>
+                                    <span class="testimonial-title">
+                                        <i class="bi bi-briefcase me-1"></i>
+                                        @item.Title
+                                    </span>
+                                </td>
+
+
+                                <!-- COMMENT -->
+                                <td>
+
+                                    <div class="testimonial-comment" style="white-space:wrap;">
+
+                                        <i class="bi bi-quote testimonial-quote"></i>
+
+                                        @if (!string.IsNullOrEmpty(item.CommentDetail))
+                                        {
+                                            if (item.CommentDetail.Length > 180)
+                                            {
+                                                @item.CommentDetail.Substring(0, 180)
+                                                <span>...</span>
+                                            }
+                                            else
+                                            {
+                                                @item.CommentDetail
+                                            }
+                                        }
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+                                <td>
+
+                                    <div class="testimonial-actions">
+
+                                        <a href="/Testimonial/UpdateTestimonial/@item.TestimonialId"
+                                           class="testimonial-action edit"
+                                           data-bs-toggle="tooltip"
+                                           title="Referansı Düzenle">
+
+                                            <i class="bi bi-pencil-fill"></i>
+
+                                        </a>
+
+                                        <a href="/Testimonial/DeleteTestimonial/@item.TestimonialId"
+                                           class="testimonial-action delete"
+                                           data-bs-toggle="tooltip"
+                                           title="Referansı Sil">
+
+                                            <i class="bi bi-trash-fill"></i>
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
                         <tr>
-                            <td>@count</td>
-                            <td>@item.NameSurname</td>
-                            <td>@item.Title</td>
-                            <td>@item.CommentDetail</td>
-                            <td>
-                                <a href="/Testimonial/UpdateTestimonial/@item.TestimonialId" class="text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Düzenle"><i class="bi bi-pencil-fill"></i></a>
-                            </td>
-                            <td>
-                                <a href="/Testimonial/DeleteTestimonial/@item.TestimonialId" class="text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sil"><i class="bi bi-trash-fill"></i></a>
+                            <td colspan="5">
+
+                                <div class="empty-testimonial">
+
+                                    <i class="bi bi-chat-square-quote"></i>
+
+                                    <h5 class="fw-bold text-dark">
+                                        Henüz referans bulunmuyor
+                                    </h5>
+
+                                    <p class="mb-3">
+                                        İlk müşteri referansını ekleyerek başlayabilirsiniz.
+                                    </p>
+
+                                    <a href="/Testimonial/CreateTestimonial"
+                                       class="btn btn-primary">
+
+                                        <i class="bi bi-plus-lg me-1"></i>
+                                        Yeni Referans Ekle
+
+                                    </a>
+
+                                </div>
+
                             </td>
                         </tr>
                     }
+
                 </tbody>
+
             </table>
-            <a href="/Testimonial/CreateTestimonial/" class="btn btn-info">Yeni Referans Girişi</a>
+
         </div>
+
     </div>
+
 </div>
+
+
+<script>
+
+    // Referans arama
+    document.getElementById("testimonialSearch")
+        .addEventListener("keyup", function () {
+
+            const searchValue = this.value.toLowerCase();
+
+            const rows = document.querySelectorAll(".testimonial-row");
+
+            rows.forEach(function (row) {
+
+                const text = row.innerText.toLowerCase();
+
+                if (text.includes(searchValue)) {
+                    row.style.display = "";
+                }
+                else {
+                    row.style.display = "none";
+                }
+
+            });
+
+        });
+
+</script>

@@ -9,7 +9,7 @@ namespace InsureYouAI.Models
 {
     public class ChatHub : Hub
     {
-        private const string apiKey = "OPENAI API KEY";
+        private const string apiKey = "";
 
         private const string aiModel = "gpt-4o-mini";
 

@@ -2,50 +2,320 @@
 
 @{
     ViewData["Title"] = "UserList";
-    Layout = "~/views/adminlayout/index.cshtml";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
     int count = 0;
 }
 
-<div class="card">
-    <div class="card-body">
-        <div class="d-flex align-items-center">
-            <h5 class="mb-0">InsureYou AI Kullanıcı Listesi</h5>
-            <form class="ms-auto position-relative">
-                <div class="position-absolute top-50 translate-middle-y search-icon px-3"><i class="bi bi-search"></i></div>
-                <input class="form-control ps-5" type="text" placeholder="search">
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4">
+
+        <!-- HEADER -->
+        <div class="d-flex align-items-center mb-4">
+
+            <div>
+                <h4 class="fw-bold mb-1 text-primary">
+                    <i class="bi bi-people-fill me-2"></i>
+                    Kullanıcı Listesi
+                </h4>
+
+                <p class="text-muted mb-0 small">
+                    InsureYou AI sistemine kayıtlı kullanıcılar
+                </p>
+            </div>
+
+            <!-- SEARCH -->
+            <form class="ms-auto position-relative" style="width: 280px;">
+                <div class="position-absolute top-50 translate-middle-y search-icon px-3">
+                    <i class="bi bi-search text-secondary"></i>
+                </div>
+
+                <input class="form-control ps-5 rounded-pill shadow-sm"
+                       type="text"
+                       placeholder="Kullanıcı ara...">
             </form>
+
         </div>
-        <div class="table-responsive mt-3">
-            <table class="table align-middle">
-                <thead class="table-secondary">
+
+
+        <!-- USER COUNT -->
+        <div class="d-flex align-items-center mb-3">
+
+            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
+                <i class="bi bi-person-check me-1"></i>
+                @Model.Count Kullanıcı
+            </span>
+
+        </div>
+
+
+        <!-- TABLE -->
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0 user-table">
+
+                <thead>
                     <tr>
                         <th>#</th>
-                        <th>Ad Soyad</th>
+                        <th>Kullanıcı</th>
+                        <th>E-posta</th>
+                        <th>Şehir</th>
                         <th>Durum</th>
-                        <th>Profil</th>
-                        <th>Yorumlar</th>
+                        <th class="text-center">Profil</th>
+                        <th class="text-center">Yorumlar</th>
                     </tr>
                 </thead>
+
                 <tbody>
+
                     @foreach (var item in Model)
                     {
                         count++;
+
                         <tr>
-                            <td>@count</td>
-                            <td>@item.Name @item.Surname</td>
+
+                            <!-- NUMBER -->
                             <td>
-                                <a href="#" class="btn btn-info">Durum</a>
+                                <span class="user-number">
+                                    @count
+                                </span>
                             </td>
+
+
+                            <!-- USER -->
                             <td>
-                                <a href="/AppUser/UserProfileWithAI/@item.Id" class="btn btn-warning">Profil</a>
+
+                                <div class="d-flex align-items-center">
+
+                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                    {
+                                        <img src="@item.ImageUrl"
+                                             class="user-avatar"
+                                             alt="@item.Name @item.Surname">
+                                    }
+                                    else
+                                    {
+                                        <div class="user-avatar user-avatar-default">
+                                            <i class="bi bi-person-fill"></i>
+                                        </div>
+                                    }
+
+                                    <div class="ms-3">
+
+                                        <div class="fw-semibold text-dark">
+                                            @item.Name @item.Surname
+                                        </div>
+
+                                        @if (!string.IsNullOrEmpty(item.Title))
+                                        {
+                                            <div class="small text-muted">
+                                                @item.Title
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                </div>
+
                             </td>
+
+
+                            <!-- EMAIL -->
                             <td>
-                                <a href="/AppUser/UserCommentsProfileWithAI/@item.Id" class="btn btn-secondary">Yorumlar</a>
+
+                                <span class="text-muted">
+                                    <i class="bi bi-envelope me-1"></i>
+                                    @item.Email
+                                </span>
+
                             </td>
+
+
+                            <!-- CITY -->
+                            <td>
+
+                                @if (!string.IsNullOrEmpty(item.City))
+                                {
+                                    <span class="city-badge">
+                                        <i class="bi bi-geo-alt me-1"></i>
+                                        @item.City
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">
+                                        Belirtilmemiş
+                                    </span>
+                                }
+
+                            </td>
+
+
+                            <!-- STATUS -->
+                            <td>
+
+                                <span class="status-badge">
+                                    <span class="status-dot"></span>
+                                    Aktif
+                                </span>
+
+                            </td>
+
+
+                            <!-- PROFILE -->
+                            <td class="text-center">
+
+                                <a href="/AppUser/UserProfileWithAI/@item.Id"
+                                   class="btn btn-sm btn-outline-primary rounded-pill px-3">
+
+                                    <i class="bi bi-person-vcard me-1"></i>
+                                    Profil
+
+                                </a>
+
+                            </td>
+
+
+                            <!-- COMMENTS -->
+                            <td class="text-center">
+
+                                <a href="/AppUser/UserCommentsProfileWithAI/@item.Id"
+                                   class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+
+                                    <i class="bi bi-chat-left-text me-1"></i>
+                                    Yorumlar
+
+                                </a>
+
+                            </td>
+
                         </tr>
                     }
+
                 </tbody>
+
             </table>
+
         </div>
+
     </div>
 </div>
+
+
+<style>
+
+    /* TABLE */
+
+    .user-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .user-table thead th {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            font-size: 13px;
+            font-weight: 600;
+            border-bottom: 1px solid #dee2e6;
+            padding: 14px 12px;
+            white-space: nowrap;
+        }
+
+        .user-table tbody td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #edf0f2;
+            vertical-align: middle;
+        }
+
+        .user-table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+            .user-table tbody tr:hover {
+                background-color: #f8faff;
+            }
+
+
+    /* USER NUMBER */
+
+    .user-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #f1f3f5;
+        color: #6c757d;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+
+    /* AVATAR */
+
+    .user-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #f0f2f5;
+    }
+
+    .user-avatar-default {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #eef3ff;
+        color: #4a6cf7;
+        font-size: 20px;
+    }
+
+
+    /* STATUS */
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 12px;
+        border-radius: 50px;
+        background-color: #eaf8ef;
+        color: #198754;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    .status-dot {
+        width: 7px;
+        height: 7px;
+        background-color: #198754;
+        border-radius: 50%;
+        margin-right: 7px;
+    }
+
+
+    /* CITY */
+
+    .city-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 10px;
+        border-radius: 50px;
+        background-color: #f1f4f8;
+        color: #6c757d;
+        font-size: 13px;
+    }
+
+
+    /* BUTTONS */
+
+    .user-table .btn {
+        transition: all 0.2s ease;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+        .user-table .btn:hover {
+            transform: translateY(-1px);
+        }
+
+</style>
